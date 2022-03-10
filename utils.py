@@ -63,7 +63,6 @@ def youtube(url: str) -> str:
         ydl.download([url])
     except Exception as e:
         print(e)
-        pass
     return path.join("downloads", f"{info['id']}.{info['ext']}")
 
 class MusicPlayer(object):
@@ -73,13 +72,10 @@ class MusicPlayer(object):
 
 
     async def send_playlist(self):
-        if not playlist:
-            pl = f"Playlist is Empty Like Your Brain"
-        else:       
-            pl = f"🎧 **Playlist**:\n" + "\n".join([
+        pl = ("🎧 **Playlist**:\\n" + "\n".join([
                 f"**{i}**. **📻{x[1]}**\n   👤**Requested by:** {x[4]}\n"
                 for i, x in enumerate(playlist)
-            ])
+            ])) if playlist else "Playlist is Empty Like Your Brain"
         if msg.get('playlist') is not None:
             await msg['playlist'].delete()
         msg['playlist'] = await self.send_text(pl)
@@ -188,9 +184,8 @@ class MusicPlayer(object):
                 continue
 
     async def stop_radio(self):
-        group_call = mp.group_call
-        if group_call:
-            playlist.clear()   
+        if group_call := mp.group_call:
+            playlist.clear()
             group_call.input_filename = ''
             try:
                 RADIO.remove(1)
@@ -200,8 +195,7 @@ class MusicPlayer(object):
                 RADIO.add(0)
             except:
                 pass
-        process = FFMPEG_PROCESSES.get(CHAT)
-        if process:
+        if process := FFMPEG_PROCESSES.get(CHAT):
             process.send_signal(signal.SIGTERM)
 
     async def start_call(self):
@@ -218,10 +212,7 @@ mp = MusicPlayer()
 
 @mp.group_call.on_network_status_changed
 async def network_status_changed_handler(gc: GroupCall, is_connected: bool):
-    if is_connected:
-        mp.chat_id = int("-100" + str(gc.full_chat.id))
-    else:
-        mp.chat_id = None
+    mp.chat_id = int(f"-100{str(gc.full_chat.id)}") if is_connected else None
 
 
 @mp.group_call.on_playout_ended

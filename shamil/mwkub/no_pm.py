@@ -38,8 +38,5 @@ async def reply(client, message):
                 await client.send_message(chat_id=admin, text=f"Hey,\nIt seems you have disabled Inline Mode for @{USERNAME}\n\nA Someone May Be A cyber kozhi or else is spaming me in PM, enable inline mode for @{USERNAME} to reply him")
             except Exception as e:
                 print(e)
-                pass
-
     except Exception as e:
         print(e)
-        pass

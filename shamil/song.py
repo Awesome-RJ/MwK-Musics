@@ -20,16 +20,14 @@ def time_to_seconds(time):
 
 @Client.on_message(filters.command(['song']))
 def a(client, message):
-    query = ''
-    for i in message.command[1:]:
-        query += ' ' + str(i)
+    query = ''.join(f' {str(i)}' for i in message.command[1:])
     print(query)
     m = message.reply('`Searching... Please Wait...`')
     ydl_opts = {"format": "bestaudio[ext=m4a]"}
     try:
         results = []
         count = 0
-        while len(results) == 0 and count < 6:
+        while not results and count < 6:
             if count>0:
                 time.sleep(1)
             results = YoutubeSearch(query, max_results=1).to_dict()
@@ -48,7 +46,7 @@ def a(client, message):
             #     m.edit("Exceeded 30mins cap")
             #     return
 
-            performer = f"[MwK-Musics]" 
+            performer = "[MwK-Musics]"
             thumb_name = f'thumb{message.message_id}.jpg'
             thumb = requests.get(thumbnail, allow_redirects=True)
             open(thumb_name, 'wb').write(thumb.content)
@@ -61,7 +59,7 @@ def a(client, message):
         m.edit(
             "**Enter Song Name with /song Command!**"
         )
-        print(str(e))
+        print(e)
         return
     m.edit("`Bruh... Uploading... Please Wait...`")
     try:

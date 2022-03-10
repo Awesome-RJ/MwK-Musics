@@ -59,9 +59,7 @@ async def search(client, query):
         )
     else:
         videosSearch = VideosSearch(string.lower(), limit=50)
-        for v in videosSearch.result()["result"]:
-            answers.append(
-                InlineQueryResultArticle(
+        answers.extend(InlineQueryResultArticle(
                     title=v["title"],
                     description=("Duration: {} Views: {}").format(
                         v["duration"],
@@ -73,8 +71,7 @@ async def search(client, query):
                         )
                     ),
                     thumb_url=v["thumbnails"][0]["url"]
-                )
-            )
+                ) for v in videosSearch.result()["result"])
         try:
             await query.answer(
                 results=answers,

@@ -33,19 +33,19 @@ match = re.match(regex,STREAM)
 if match:
     meta = ydl.extract_info(STREAM, download=False)
     formats = meta.get('formats', [meta])
-    for f in formats:
-        links.append(f['url'])
+    links.extend(f['url'] for f in formats)
     finalurl=links[0]
 else:
     finalurl=STREAM
+
+
 
 class Config:
     ADMIN = os.environ.get("ADMINS", '')
     ADMINS = [int(admin) if re.search('^\d+$', admin) else admin for admin in (ADMIN).split()]
     API_ID = int(os.environ.get("API_ID", ''))
     CHAT = int(os.environ.get("CHAT", ""))
-    LOG_GROUP=os.environ.get("LOG_GROUP", "")
-    if LOG_GROUP:
+    if LOG_GROUP := os.environ.get("LOG_GROUP", ""):
         LOG_GROUP=int(LOG_GROUP)
     else:
         LOG_GROUP=None
@@ -55,7 +55,7 @@ class Config:
     REPLY_MESSAGE=os.environ.get("REPLY_MESSAGE", None)
     DURATION_LIMIT=int(os.environ.get("DUR", 15))
     API_HASH = os.environ.get("API_HASH", "")
-    BOT_TOKEN = os.environ.get("BOT_TOKEN", "") 
+    BOT_TOKEN = os.environ.get("BOT_TOKEN", "")
     SESSION = os.environ.get("SESSION_STRING", "SESSION")
     DOWNLOAD_LOCATION = os.environ.get("DOWNLOAD_LOCATION", "./DOWNLOADS/")
     playlist=[]

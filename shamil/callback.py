@@ -63,13 +63,10 @@ async def cb_handler(client: Client, query: CallbackQuery):
         if not playlist:
             return
         group_call.restart_playout()
-        if not playlist:
-            pl = f"😖 Nothing On Que Ser"
-        else:
-            pl = f"🎧 **Playlist**:\n" + "\n".join([
+        pl = ("🎧 **Playlist**:\\n" + "\n".join([
                 f"**{i}**. **📻{x[1]}**\n   👤**Requested by:** {x[4]}"
                 for i, x in enumerate(playlist)
-                ])
+                ])) if playlist else "😖 Nothing On Que Ser"
         await query.edit_message_text(
                 f"{pl}",
                 parse_mode="Markdown",
@@ -89,12 +86,11 @@ async def cb_handler(client: Client, query: CallbackQuery):
     elif query.data == "ps":
         if not playlist:
             return
-        else:
-            mp.group_call.pause_playout()
-            pl = f"🎧 **Playlist**:\n" + "\n".join([
+        mp.group_call.pause_playout()
+        pl = ("🎧 **Playlist**:\\n" + "\n".join([
                 f"**{i}**. **📻{x[1]}**\n   👤**Requested by:** {x[4]}"
                 for i, x in enumerate(playlist)
-                ])
+                ]))
         await query.edit_message_text(f"{emoji.PLAY_OR_PAUSE_BUTTON} Paused\n\n{pl}",
         reply_markup=InlineKeyboardMarkup(
                     [
@@ -109,16 +105,15 @@ async def cb_handler(client: Client, query: CallbackQuery):
                 )
             )
 
-    
+
     elif query.data == "rs":   
         if not playlist:
             return
-        else:
-            mp.group_call.resume_playout()
-            pl = f"🎧 **Playlist**:\n" + "\n".join([
+        mp.group_call.resume_playout()
+        pl = ("🎧 **Playlist**:\\n" + "\n".join([
                 f"**{i}**. **📻{x[1]}**\n   👤**Requested by:** {x[4]}"
                 for i, x in enumerate(playlist)
-                ])
+                ]))
         await query.edit_message_text(f"{emoji.PLAY_OR_PAUSE_BUTTON} Resumed\n\n{pl}",
         reply_markup=InlineKeyboardMarkup(
                     [
@@ -136,12 +131,11 @@ async def cb_handler(client: Client, query: CallbackQuery):
     elif query.data=="sk":   
         if not playlist:
             return
-        else:
-            await mp.skip_current_playing()
-            pl = f"🎧 **Playlist**:\n" + "\n".join([
+        await mp.skip_current_playing()
+        pl = ("🎧 **Playlist**:\\n" + "\n".join([
                 f"**{i}**. **📻{x[1]}**\n   👤**Requested by:** {x[4]}"
                 for i, x in enumerate(playlist)
-                ])
+                ]))
         try:
             await query.edit_message_text(f"{emoji.PLAY_OR_PAUSE_BUTTON} Skipped\n\n{pl}",
             reply_markup=InlineKeyboardMarkup(
@@ -152,7 +146,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
                         ],[
                             InlineKeyboardButton("Skip", callback_data="sk"),
                             InlineKeyboardButton("Musics", url="https://t.me/mwksongs")
-                            
+
                     ],
                 ]
             )
